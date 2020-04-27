@@ -2,7 +2,7 @@ from invoke import task
 
 @task
 def clean(c):
-    for f in ("build", "dist", "nmcipher.egg-info"):
+    for f in ("build", "dist", "*.egg-info"):
         print(f"removing contents of directory '{f}'...")
         c.run(f"rm -rf {f}")
 
@@ -16,4 +16,4 @@ def upload(c):
 
 @task
 def doctest(c):
-    c.run("python -m doctest nmcipher/cli.py -v")
+    c.run("python -m doctest nmcipher/cli/cli.py -v")

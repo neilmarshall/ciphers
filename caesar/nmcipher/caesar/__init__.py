@@ -1,5 +1,5 @@
-from .caesar import Caesar
 from nmcipher.cli import Parser
+from .caesar import Caesar
 
 def encrypt_func(key, message, symbols):
     cipher = Caesar(key, symbols)
@@ -19,6 +19,5 @@ def hack_func(method, message, symbols):
         print(f"With key = {key}:")
         print(f"\tOutput: {cipher.decrypt(message)}")
 
-
-if __name__ == '__main__':
+def main():
     Parser(encrypt_func, decrypt_func, hack_func)()

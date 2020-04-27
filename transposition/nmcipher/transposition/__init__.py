@@ -1,5 +1,5 @@
-from .columnar import Columnar
 from nmcipher.cli import Parser
+from .columnar import Columnar
 
 def encrypt_func(key, message):
     cipher = Columnar(key)
@@ -19,6 +19,5 @@ def hack_func(method, message):
         print(f"With key = {key}:")
         print(f"\tOutput: {cipher.decrypt(message)}")
 
-
-if __name__ == '__main__':
+def main():
     Parser(encrypt_func, decrypt_func, hack_func)()
