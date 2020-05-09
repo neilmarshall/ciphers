@@ -1,7 +1,7 @@
 import unittest
 from string import ascii_uppercase
 
-from caesar.caesar import Caesar
+from caesar import Caesar
 
 class TestCaesar(unittest.TestCase):
     def test_encryption(self):

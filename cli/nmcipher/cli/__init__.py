@@ -1,8 +1,40 @@
 from .parser import Parser
 from .detect_english import DetectEnglish
 
+from nmcipher.affine import Affine
 from nmcipher.caesar import Caesar
 from nmcipher.transposition import Columnar
+
+def affine(args=None):
+    def encrypt_func(*, message=None, key=None, symbols=None, **kwargs):
+        if message is None or key is None or symbols is None:
+            raise ValueError("missing input parameters")
+        cipher = Affine(key, symbols)
+        print(f"Original message: {message}")
+        print(f"Encrypted message: {cipher.encrypt(message)}")
+
+    def decrypt_func(*, message=None, key=None, symbols=None, **kwargs):
+        if message is None or key is None or symbols is None:
+            raise ValueError("missing input parameters")
+        cipher = Affine(key, symbols)
+        print(f"Encrypted message: {message}")
+        print(f"Decrypted message: {cipher.decrypt(message)}")
+
+    def hack_func(*, message=None, symbols=None, dictionary_filepath=None, **kwargs):
+        if message is None or symbols is None or dictionary_filepath is None:
+            raise ValueError("missing input parameters")
+        de = DetectEnglish(dictionary_filepath)
+        def compare_keys(k):
+            try:
+                decrypted_message = Affine(k, symbols).decrypt(message)
+                return de.english_score(decrypted_message.split())
+            except ValueError:
+                return 0
+        expected_key = max(range(1, len(symbols)**2 + 1), key=compare_keys)
+        print(f"Checking key '{expected_key}':")
+        print(f"\tOutput: {Affine(expected_key, symbols).decrypt(message)}")
+
+    Parser(encrypt_func, decrypt_func, hack_func)(args)
 
 def caesar(args=None):
     def encrypt_func(*, message=None, key=None, symbols=None, **kwargs):

@@ -1,6 +1,6 @@
 import unittest
 
-from transposition.columnar import Columnar
+from transposition import Columnar
 
 class TestColumn(unittest.TestCase):
     def test_encryption(self):
