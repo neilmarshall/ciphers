@@ -16,4 +16,4 @@ def upload(c):
 
 @task
 def doctest(c):
-    c.run("python -m doctest nmcipher/cli/cli.py -v")
+    c.run("python -m doctest nmcipher/cli/parser.py -v")

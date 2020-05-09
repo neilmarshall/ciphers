@@ -2,18 +2,18 @@ import argparse
 
 class Parser():
     """
-    >>> encrypt_func = lambda _, m: m[::-1]
-    >>> decrypt_func = lambda _, m: m[::-1]
-    >>> hack_func = lambda _, m: m[::-1]
+    >>> encrypt_func = lambda **kwargs: kwargs["message"][::-1]
+    >>> decrypt_func = lambda **kwargs: kwargs["message"][::-1]
+    >>> hack_func = lambda **kwargs: kwargs["message"][::-1]
     >>> parser = Parser(encrypt_func, decrypt_func, hack_func)
 
-    >>> parser(["enc", "4", "ABC"])
+    >>> parser(["encrypt", "--key", "4", "--message", "ABC"])
     'CBA'
 
-    >>> parser(["dec", "4", "CBA"])
+    >>> parser(["dec", "-k", "4", "-m", "CBA"])
     'ABC'
 
-    >>> parser(["hack", "brute", "CBA"])
+    >>> parser(["hack", "-m", "CBA"])
     'ABC'
     """
 
@@ -25,33 +25,36 @@ class Parser():
 
         # add encryption subcommand
         encrypt_parser = subparsers.add_parser("encrypt", aliases=["enc"], help="encrypt a message")
-        encrypt_parser.add_argument("key", type=int, help="encryption key")
-        encrypt_parser.add_argument("message", type=str, help="message to encrypt")
+        encrypt_parser.add_argument("--message", "-m", type=str, help="message to encrypt")
+        encrypt_parser.add_argument("--key", "-k", type=int, help="encryption key")
         encrypt_parser.add_argument("--symbols", "-s", type=str, help="encryption symbols")
         encrypt_parser.set_defaults(func=encrypt_func)
 
         # add decryption subcommand
         decrypt_parser = subparsers.add_parser("decrypt", aliases=["dec"], help="decrypt an encrypted message")
-        decrypt_parser.add_argument("key", type=int, help="decryption key")
-        decrypt_parser.add_argument("message", type=str, help="message to decrypt")
+        decrypt_parser.add_argument("--message", "-m", type=str, help="message to decrypt")
+        decrypt_parser.add_argument("--key", "-k", type=int, help="decryption key")
         decrypt_parser.add_argument("--symbols", "-s", type=str, help="decryption symbols")
         decrypt_parser.set_defaults(func=decrypt_func)
 
         # add hack subcommand
         hack_parser = subparsers.add_parser("hack", help="hack an encrypted message")
-        hack_parser.add_argument("method", choices=["brute"], help="attack method")
-        hack_parser.add_argument("message", type=str, help="message to decrypt")
+        hack_parser.add_argument("--message", "-m", type=str, help="message to decrypt")
         hack_parser.add_argument("--symbols", "-s", type=str, help="decryption symbols")
+        hack_parser.add_argument("--dictionary", "-d", type=str, help="filepath to dictionary of known words")
         hack_parser.set_defaults(func=hack_func)
 
     def __call__(self, args=None):
         parsed_args = self.parser.parse_args(args)
-        if parsed_args.subcommand == "hack":
-            if parsed_args.symbols:
-                return parsed_args.func(parsed_args.method, parsed_args.message, parsed_args.symbols)
-            else:
-                return parsed_args.func(parsed_args.method, parsed_args.message)
-        if parsed_args.symbols:
-            return parsed_args.func(parsed_args.key, parsed_args.message, parsed_args.symbols)
+
+        kwargs = None
+        if parsed_args.subcommand in {"encrypt", "enc"}:
+            kwargs = {"message": parsed_args.message, "key": parsed_args.key, "symbols": parsed_args.symbols}
+        elif parsed_args.subcommand in {"decrypt", "dec"}:
+            kwargs = {"message": parsed_args.message, "key": parsed_args.key, "symbols": parsed_args.symbols}
+        elif parsed_args.subcommand in {"hack"}:
+            kwargs = {"message": parsed_args.message, "symbols": parsed_args.symbols, "dictionary_filepath": parsed_args.dictionary}
         else:
-            return parsed_args.func(parsed_args.key, parsed_args.message)
+            raise ValueError("subcommand not recognised")
+
+        return parsed_args.func(**kwargs)
