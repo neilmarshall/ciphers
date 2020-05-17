@@ -1,19 +1,51 @@
+"""Encrypt and decrypt messages using transposition cipher"""
+
 class Columnar():
+    """Class encrypts and decrypts messages using transposition cipher"""
 
     @staticmethod
     def pad(string, length, padding=' '):
+        """Add whitespace to the end of a string
+
+        :param string: string to pad
+        :type string: str
+        :param length: length of padding to add
+        :type length: int
+        :param padding: character to pad string with (default is ' ')
+        :type padding: str
+        """
         return string if len(string) >= length else Columnar.pad(string + padding, length, padding)
 
     @staticmethod
     def core_algorithm(key, message):
-        columns = tuple(Columnar.pad(message[i : i + key], key) for i in range(0, len(message), key))
+        """Core encryption algorithm
+
+        :param key: Encryption key
+        :type key: int
+        """
+        columns = tuple(Columnar.pad(message[i : i + key], key)
+                        for i in range(0, len(message), key))
         return ''.join(''.join(column[i] for column in columns) for i in range(key))
 
     def __init__(self, key):
+        """Class initializer
+
+        :param key: Encryption key
+        :type key: int
+        """
         self.key = key
 
     def encrypt(self, message):
+        """Encrypt a message
+
+        :param message: message to encrypt
+        """
         return Columnar.core_algorithm(self.key, message)
 
     def decrypt(self, message):
-        return Columnar.core_algorithm(len(message) // self.key if self.key != 0 else len(message), message).strip()
+        """Decrypt a message
+
+        :param message: message to decrypt
+        """
+        denominator = self.key if self.key != 0 else len(message)
+        return Columnar.core_algorithm(len(message) // denominator, message).strip()
