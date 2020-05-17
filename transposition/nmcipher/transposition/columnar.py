@@ -13,6 +13,15 @@ class Columnar():
         :type length: int
         :param padding: character to pad string with (default is ' ')
         :type padding: str
+
+        :example:
+        >>> cipher = Columnar(4)
+
+        >>> cipher.encrypt('a secret message')
+        'ac s rmaseegetse'
+
+        >>> cipher.decrypt('ac s rmaseegetse')
+        'a secret message'
         """
         return string if len(string) >= length else Columnar.pad(string + padding, length, padding)
 

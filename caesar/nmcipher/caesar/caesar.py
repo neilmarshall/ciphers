@@ -12,6 +12,15 @@ class Caesar():
         :param symbols: Encryption symbols
         :type symbols: string
         :param reverse: Create translation table for encryption or decrypttion (default is False)
+
+        :example:
+        >>> cipher = Caesar(4, 'abcdefhijklmnopqrstuvwxyz')
+
+        >>> cipher.encrypt('a secret message')
+        'e wjhvjx qjwwegj'
+
+        >>> cipher.decrypt('e wjhvjx qjwwegj')
+        'a secret message'
         """
         table = {symbols[i]: symbols[(i + key) % len(symbols)] for i in range(len(symbols))}
         return str.maketrans(table if not reverse else {v: k for k, v in table.items()})

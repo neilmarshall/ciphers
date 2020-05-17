@@ -24,6 +24,15 @@ class Affine():
         :type key: int
         :param symbols: Encryption symbols that will be encrypted
         "type symbols: str
+
+        :example:
+        >>> cipher = Affine(727, 'abcdefghijklmnopqrstuvwxyz')
+
+        >>> cipher.encrypt('a secret message')
+        'z rdbqds ldrrzfd'
+
+        >>> cipher.decrypt('z rdbqds ldrrzfd')
+        'a secret message'
         """
         key_a, key_b = key // len(symbols), key % len(symbols)
         if key_a == 1:

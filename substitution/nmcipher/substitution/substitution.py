@@ -10,6 +10,15 @@ class Substitution():
 
         :param key: Encryption key; must be a permutation of the standard alphabet
         :type key: str
+
+        :example:
+        >>> cipher = Substitution('nopqrtuvwxijklmsyzabcdefgh')
+
+        >>> cipher.encrypt('a secret message')
+        'n arpzrb kraanur'
+
+        >>> cipher.decrypt('n arpzrb kraanur')
+        'a secret message'
         """
         if sorted(key.lower()) + sorted(key.upper()) != list(ascii_letters):
             raise ValueError("Invalid key - must be a (case-insensitive) permutation"
