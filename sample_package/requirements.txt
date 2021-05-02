@@ -6,7 +6,7 @@ idna==2.9
 invoke==1.4.1
 keyring==21.2.0
 pkginfo==1.5.0.1
-Pygments==2.6.1
+Pygments==2.7.4
 readme-renderer==26.0
 requests==2.23.0
 requests-toolbelt==0.9.1
